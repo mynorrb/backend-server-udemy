@@ -1,12 +1,29 @@
 //require
+require('./config/config');
 const express = require('express');
 const colors = require('colors');
-const { json } = require('express');
-
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+
+
+//Inicializar variables
+var app = express();
+
+// parse application/x-www-form-urlencoded (body parser)
+app.use(bodyParser.urlencoded({ extended: false }));
+
+
+//Importando rutas
+const appRoutes = require('./routes/app');
+const usuarioRoutes = require('./routes/usuario');
+const loginRoutes = require('./routes/login');
+
+//Modelos
+const usuario = require('./models/usuario');
+
 
 //conexión a BD
-mongoose.connect('mongodb://localhost:27017/hospitalDB', {
+mongoose.connect(process.env.URLDB, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true
@@ -16,22 +33,15 @@ mongoose.connect('mongodb://localhost:27017/hospitalDB', {
 });
 
 
-//Inicializar variables
-var app = express();
-
 
 //Rutas
-app.get('/', (req, res, next) => {
+app.use('/usuario', usuarioRoutes);
+app.use('/login', loginRoutes);
+app.use('/', appRoutes);
 
-    return res.status(200).json({
-        ok: true,
-        message: 'Hola mundo'
-    });
-
-});
 
 
 //escuchar peticiiones
 app.listen(3000, () => {
-    console.log('Escuchando puerto: 3000', 'online'.green);
+    console.log('Escuchando puerto:', (process.env.PORT).red, 'online'.green);
 });

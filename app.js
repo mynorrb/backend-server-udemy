@@ -4,6 +4,7 @@ const express = require('express');
 const colors = require('colors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const path = require('path');
 
 
 //Inicializar variables
@@ -12,6 +13,8 @@ var app = express();
 // parse application/x-www-form-urlencoded (body parser)
 app.use(bodyParser.urlencoded({ extended: false }));
 
+//habilitar la carpeta public
+app.use(express.static(path.resolve(__dirname, './public')));
 
 //Importando rutas
 const appRoutes = require('./routes/app');

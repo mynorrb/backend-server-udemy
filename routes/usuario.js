@@ -17,7 +17,15 @@ const { verificaToken, verificaAdmin_Role } = require('../middlewares/autenticac
 //===================================================
 app.get('/', verificaToken, (req, res, next) => {
 
+    let desde = req.query.desde || 0;
+    desde = Number(desde);
+
+    let limite = req.query.limite || 5;
+    limite = Number(limite);
+
     Usuario.find({ estado: true }, 'nombre email img role')
+        .skip(desde)
+        .limit(limite)
         .exec((err, usuarios) => {
 
             if (err) {
@@ -28,9 +36,12 @@ app.get('/', verificaToken, (req, res, next) => {
                 });
             }
 
-            return res.status(200).json({
-                ok: true,
-                usuarios
+            Usuario.countDocuments({ estado: true }, (err, conteo) => {
+                return res.status(200).json({
+                    ok: true,
+                    usuarios,
+                    total: conteo
+                });
             });
 
         });

@@ -60,7 +60,8 @@ let verificaTokenImg = (req, res, next) => {
         if (err) {
             return res.status(401).json({
                 ok: false,
-                err: {
+                mensaje: 'Token no válido',
+                errors: {
                     message: 'Token no válido'
                 }
             });

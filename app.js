@@ -16,10 +16,18 @@ app.use(bodyParser.urlencoded({ extended: false }));
 //Importando rutas
 const appRoutes = require('./routes/app');
 const usuarioRoutes = require('./routes/usuario');
+const hospitalRoutes = require('./routes/hospital');
+const medicoRoutes = require('./routes/medico');
+const busquedaRoutes = require('./routes/busqueda');
 const loginRoutes = require('./routes/login');
+const uploadRoutes = require('./routes/upload');
+const imagenRoutes = require('./routes/imagenes');
+
 
 //Modelos
 const usuario = require('./models/usuario');
+const hospital = require('./models/hospital');
+const medico = require('./models/medico');
 
 
 //conexión a BD
@@ -36,6 +44,11 @@ mongoose.connect(process.env.URLDB, {
 
 //Rutas
 app.use('/usuario', usuarioRoutes);
+app.use('/hospital', hospitalRoutes);
+app.use('/medico', medicoRoutes);
+app.use('/busqueda', busquedaRoutes);
+app.use('/upload', uploadRoutes);
+app.use('/imagen', imagenRoutes);
 app.use('/login', loginRoutes);
 app.use('/', appRoutes);
 

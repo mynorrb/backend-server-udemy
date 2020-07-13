@@ -3,6 +3,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const _ = require('underscore');
 
+
 //configuración de express
 const app = express();
 
@@ -12,10 +13,11 @@ const Usuario = require('../models/usuario');
 //middlewares
 const { verificaToken, verificaAdmin_Role } = require('../middlewares/autenticacion');
 
+
 //===================================================
 // Obtener todos los usuarios
 //===================================================
-app.get('/', verificaToken, (req, res, next) => {
+app.get('/', (req, res, next) => {
 
     let desde = req.query.desde || 0;
     desde = Number(desde);
@@ -23,7 +25,7 @@ app.get('/', verificaToken, (req, res, next) => {
     let limite = req.query.limite || 5;
     limite = Number(limite);
 
-    Usuario.find({ estado: true }, 'nombre email img role')
+    Usuario.find({ estado: true }, 'nombre email img role google')
         .skip(desde)
         .limit(limite)
         .exec((err, usuarios) => {
@@ -52,7 +54,7 @@ app.get('/', verificaToken, (req, res, next) => {
 //===================================================
 // Crear un nuevo usuario
 //===================================================
-app.post('/', [verificaToken, verificaAdmin_Role], (req, res) => {
+app.post('/', (req, res) => {
 
     let body = req.body;
 
@@ -85,13 +87,13 @@ app.post('/', [verificaToken, verificaAdmin_Role], (req, res) => {
 //===================================================
 // Actualizar usuario
 //===================================================
-app.put('/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
+app.put('/:id', verificaToken, (req, res) => {
 
     let id = req.params.id;
     let body = _.pick(req.body, ['nombre', 'email', 'img', 'role', 'estado']);
 
 
-    Usuario.findByIdAndUpdate(id, body, { new: true, runValidators: true }, (err, usuarioDB) => {
+    Usuario.findByIdAndUpdate(id, body, { new: true }, (err, usuarioDB) => {
 
         if (err) {
             return res.status(400).json({
@@ -124,7 +126,7 @@ app.put('/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
 //===================================================
 // Eliminar usuario por id
 //===================================================
-app.delete('/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
+app.delete('/:id', verificaToken, (req, res) => {
 
     let id = req.params.id;
 
